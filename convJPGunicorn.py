@@ -30,4 +30,4 @@ if __name__ == "__main__":
         cv.imwrite("C:/Purdue/LeGrand/EOjpg/" + fNameClean + ".jpg", scanlineArray)
     
         i += 6 #Only use .r0 versions
-        print(i)
+        #print(i)

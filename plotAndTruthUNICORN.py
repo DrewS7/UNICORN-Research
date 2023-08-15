@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 #import cv2 as cv # only needed if you want to convert the image
 
 if __name__ == "__main__":
-	fName = "20080816144140-01004700-VIS.ntf.r0" #If change r number, need to change string in rstrip
+	fName = "20080816144140-01004701-VIS.ntf.r0" #If change r number, need to change string in rstrip
 	#fPath = "X:/EO/" + fName #From data depot
 	fPath = "C:/Purdue/LeGrand/EO/" + fName #From my downloads
 	dataset = gdal.Open(fPath)

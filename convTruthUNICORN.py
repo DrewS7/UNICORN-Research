@@ -11,8 +11,8 @@ if __name__ == "__main__":
     df = pd.read_csv("C:/Purdue/LeGrand/wamitt_gotcha_csv.csv")
     imgIDs = df["track_point.fileId"]  # Pandas series of fileId column
     classesPd = df["target_type.name"]
-    # boxWidth = df["track.width"]
-    # boxHeight = df["track.length"] #YOLO uses width/height, UNICORN length/width, I think height=length? Can also flip and try again
+    boxWidth = df["track.width"]
+    boxLength = df["track.length"] #YOLO uses width/height, UNICORN length/width, I think height=length? Can also flip and try again
     # or just make a square. Also, not entirely sure what the values mean, could try manual truth. For now, just 15x15 pixel square.
     # Try and email authors - which dimension is which, and what units are the numbers in? Too small for pixels, too large for geospat
     trackLat = df["track_point.latitude"]
@@ -20,19 +20,18 @@ if __name__ == "__main__":
 
     trackIDsList = imgIDs.tolist()  # Pandas series to list
     classesList = classesPd.tolist()
-    # boxWidthList = boxWidth.tolist()
-    # boxHeightList = boxHeight.tolist()
     xCenterList = []
     yCenterList = []
+    boxLengthList = []
     boxWidthList = []
-    boxHeightList = []
     goodRows = []
+    goodClasses = []
 
     uniqueClasses = set(classesList)
     uniqueClassesList = list(uniqueClasses)
     uniqueClassesList.sort()
-    # print(len(uniqueClasses)) 21 classes
-    # print(uniqueClassesList)
+    #print(len(uniqueClasses)) #21 classes
+    #print(uniqueClassesList)
     uniqueIDs = set(imgIDs)
     # print(len(uniqueIDs)) #6471 unique IDs, I only have 500 images
 
@@ -62,21 +61,28 @@ if __name__ == "__main__":
             xCenterList.append(xImgYolo)
             yCenterList.append(yImgYolo)
             # Make and store bounding box
-            bBoxX = 15 / dataset.RasterXSize
-            bBoxY = 15 / dataset.RasterXSize
-            boxWidthList.append(bBoxX)
-            boxHeightList.append(bBoxY)
+            #bBoxX = 15 / dataset.RasterXSize
+            #bBoxY = 15 / dataset.RasterXSize
+            bBoxX = 4 * boxLength[i] / dataset.RasterXSize
+            bBoxY = 4 * boxWidth[i] / dataset.RasterYSize
+            boxLengthList.append(bBoxX)
+            boxWidthList.append(bBoxY)
             # Store row of eligible image
             goodRows.append(i)
+            #Get class of truth entry
+            classTruth = classesList[i]
+            numClassTruth = uniqueClassesList.index(classTruth)
+            goodClasses.append(numClassTruth)
 
     print("Part 1 done")
 
     for idx in range(0, len(goodRows)):  # For each row for an image I have
         # for idx in range(0, 10):
-        fileName = "C:/Purdue/LeGrand/EOlabels/" + imgIDs[idx] + ".txt"  # YOLO title
+        goodIndex = goodRows[idx] #Iterate through list of images I have, not all iamges
+        fileName = "C:/Purdue/LeGrand/EOlabels2/" + imgIDs[goodIndex] + ".txt"  # YOLO title
         if os.path.isfile(fileName):
             with open(fileName, "a") as f:  # Append as new row to existing file
-                classInt = uniqueClassesList.index(classesList[idx])  # Number for class
+                classInt = goodClasses[idx]  # Number for class
                 # YOLO annotation format
                 label = (
                     "\n"
@@ -86,14 +92,14 @@ if __name__ == "__main__":
                     + " "
                     + str(yCenterList[idx])  # y location
                     + " "
-                    + str(boxWidthList[idx])  # bounding box width
+                    + str(boxLengthList[idx])  # bounding box width
                     + " "
-                    + str(boxHeightList[idx])  # bounding box height
+                    + str(boxWidthList[idx])  # bounding box height
                 )
                 f.write(label)
         else:
             with open(fileName, "w") as f:  # Write new file
-                classInt = uniqueClassesList.index(classesList[idx])
+                classInt = goodClasses[idx]
                 label = (
                     str(classInt)
                     + " "
@@ -101,8 +107,8 @@ if __name__ == "__main__":
                     + " "
                     + str(yCenterList[idx])
                     + " "
-                    + str(boxWidthList[idx])
+                    + str(boxLengthList[idx])
                     + " "
-                    + str(boxHeightList[idx])
+                    + str(boxWidthList[idx])
                 )
                 f.write(label)
