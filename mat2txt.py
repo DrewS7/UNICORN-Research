@@ -2,10 +2,10 @@ import pandas as pd
 import cv2 as cv
 import os, os.path
 
-dfTargets = pd.read_csv("C:/Users/Drew/Downloads/matTargets.csv")
-dfIDs = pd.read_csv("C:/Users/Drew/Downloads/matIDs.csv")
+dfTargets = pd.read_csv("C:/Users/Drews/Downloads/matTargets.csv")
+dfIDs = pd.read_csv("C:/Users/Drews/Downloads/matIDs.csv")
 
-#Csv column names wrong bc misread docs
+# Csv column names wrong bc misread docs
 IDs = dfIDs["ids"]
 classes = dfTargets["classes"]
 xLeft = dfTargets["xcenter"]
@@ -17,25 +17,25 @@ uniqueIDsSorted = list(uniqueIDs)
 uniqueIDsSorted.sort()
 dimensions = []
 
-#From properties, images different dimensions
+# From properties, images different dimensions
 for i in uniqueIDsSorted:
-    imgName = "C:/Purdue/LeGrand/WIP/datasets/trainGoodXview/images/" + str(i) + ".tif"
+    imgName = "C:/Purdue/LeGrand/WIP/datasets/train/" + str(i) + ".tif"
     if os.path.isfile(imgName):
-        img = cv.imread("C:/Purdue/LeGrand/WIP/datasets/trainGoodXview/images/" + str(i) + ".tif")
+        img = cv.imread("C:/Purdue/LeGrand/WIP/datasets/train/" + str(i) + ".tif")
         dimensions.append(img.shape)
     else:
-        img = cv.imread("C:/Purdue/LeGrand/WIP/datasets/validGoodXview/images/" + str(i) + ".tif")
+        img = cv.imread("C:/Purdue/LeGrand/WIP/datasets/valid/" + str(i) + ".tif")
         dimensions.append(img.shape)
-#width is dimensions[i][1], height is dimensions[i][0]
+# width is dimensions[i][1], height is dimensions[i][0]
 
 xCenter = []
 yCenter = []
 xWidth = []
 yHeight = []
 
-#xyxy2xywh my version
+# xyxy2xywh my version
 for i in range(0, len(xLeft)):
-#for i in range(0, 10):
+    # for i in range(0, 10):
     xCenterTemp = (xLeft[i] + xRight[i]) / 2
     xCenter.append(xCenterTemp)
     yCenterTemp = (yTop[i] + yBot[i]) / 2
@@ -44,9 +44,9 @@ for i in range(0, len(xLeft)):
     xWidth.append(xWidthTemp)
     yHeightTemp = -(yTop[i] - yBot[i])
     yHeight.append(yHeightTemp)
-#Normalize values
+# Normalize values
 for i in range(0, len(xLeft)):
-#for i in range(0, 10):
+    # for i in range(0, 10):
     imgID = IDs[i]
     imgPos = uniqueIDsSorted.index(imgID)
 
@@ -57,9 +57,9 @@ for i in range(0, len(xLeft)):
 
 print("Done numbers")
 
-#From convTruthUNICORN
+# From convTruthUNICORN
 for idx in range(0, len(xLeft)):
-#for idx in range(0, 10):
+    # for idx in range(0, 10):
     fileRoot = "C:/Purdue/LeGrand/WIP/xViewLabels/"
     fileName = fileRoot + str(IDs[idx]) + ".txt"
     if os.path.isfile(fileName):
