@@ -4,10 +4,14 @@ from PIL import Image
 import os
 
 # Specify the input folder containing .tiff images
-input_folder = "C:/Purdue/LeGrand/WIP/datasets/xviewLatest/train/imagesTiff"
+# input_folder = "C:/Purdue/LeGrand/WIP/datasets/xviewLatest/train/imagesTiff"
+input_folder = "C:/Purdue/LeGrand/WIP/datasets/xviewLatest/valid/imagesTiff"
+
 
 # Specify the output folder where you want to save .png images
-output_folder = "C:/Purdue/LeGrand/WIP/datasets/xviewLatest/train/imagesPNG"
+# output_folder = "C:/Purdue/LeGrand/WIP/datasets/xviewLatest/train/imagesPNG"
+output_folder = "C:/Purdue/LeGrand/WIP/datasets/xviewLatest/valid/imagesPNG"
+
 
 # Create the output folder if it doesn't exist
 # os.makedirs(output_folder, exist_ok=True)
@@ -28,6 +32,6 @@ for file_name in file_list:
         # Convert and save the image as .png
         image.save(output_path, "PNG")
 
-        print(f"Converted {file_name} to {output_file}")
+        # print(f"Converted {file_name} to {output_file}")
 
 print("Conversion complete.")
